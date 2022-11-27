@@ -39,6 +39,8 @@ class helpers():
                 else: 
                     return dt - timedelta(days=1)
 
+
+
 class FFR_probs():
     def test():
         return 0
@@ -59,31 +61,51 @@ class FFR_data():
             priceoffutures_dict[ff['Day'][i]] = ff['Price'][i]
         return priceoffutures_dict
 
+    def assing_fprices(df):
+        df['PricePrevDay'] = df['PrevDay'].apply(lambda x : priceoffutures_dict[x] if x in priceoffutures_dict.keys() else 0)
+    
 
-    def get_dates():
+
+    def get_prev_dates():
         url = 'https://en.wikipedia.org/wiki/History_of_Federal_Open_Market_Committee_actions'
         html = requests.get(url).content
         df_list = pd.read_html(html)
-        df = df_list[1].iloc[:1] #current 
+        df = df_list[1] #current 
 
         #data prep and clean 
         df['dt'] = df['Date'].apply(lambda x:datetime.strptime(x, '%B %d, %Y'))
         df['dow'] = df['dt'].apply(lambda x : datetime.weekday(x))
         
+        
 
-        df['Rate'] = df['Fed. Funds Rate'].apply(helpers.split_rate)
+        df = df[['Fed. Funds Rate', 'dt']]
+        df.columns = ['Rate', 'Day']
 
+        return df
 
-        df = df[['Rate', 'dt', 'dow']]
-        df.columns = ['Rate', 'Day', 'DayOfWeek']
-
-
+    def add_columns(df):
+        if 'Rate' in df.columns:
+            df['Rate'] = df['Rate'].apply(helpers.split_rate)
+        df['DayOfWeek'] = df['Day'].apply(lambda x : datetime.weekday(x))
         df['NextDay'] = df.apply(lambda x: helpers.N_filter(x['Day'], x['DayOfWeek']), axis = 1)
         df['PrevDay'] = df.apply(lambda x: helpers.B_filter(x['Day'], x['DayOfWeek']), axis = 1)
         return df
+
+    def next_meeting(): #make automatic 
+        date = '2022-12-14'
+        d = {'Day': ['2022-12-14'], 'Rate':['3.75%–4.00%']}
+        df = pd.DataFrame(d)
+        df['Day'] = df['Day'].apply(lambda x:datetime.strptime(x, '%Y-%m-%d'))
+        return df
+        
+        
 
 
 
 if __name__ == "__main__":
     #print(FFR_data.get_futures())
-    print(FFR_data.get_dates())
+    #print(FFR_data.get_prev_dates())
+    #print(FFR_data.next_meeting())
+    #df = FFR_data.get_prev_dates()
+    df = FFR_data.next_meeting()
+    print(FFR_data.add_columns(df))
