@@ -13,7 +13,7 @@ from bs4 import BeautifulSoup
 from datetime import datetime, timedelta
 
 class helpers():
-        def split_rate(s):
+        def split_rate(s): # splits string of type '0.00%-0.25% into a float num 12.5 pp
             if chr(8211) in s:
                 wow = s.split(chr(8211))
                 s1 = wow[0][:-1]
@@ -22,22 +22,38 @@ class helpers():
             else:
                 return float(s[:-1]) 
 
-        #adding day before and day after 
-        def N_filter(dt, dow):
+        def N_filter(dt, dow): # returns the next date markets were open for the date given 
             
                 if dow >= 4: 
                     return dt + timedelta(days=(7-dow))
                 else: 
                     return dt + timedelta(days=1)
 
-        def B_filter(dt, dow):
-            
+        def B_filter(dt, dow): # returns the last date markets were open for the date given 
+                dow = datetime.weekday(dt)
                 if dow == 6: 
-                    return dt - timedelta(days=(2))
-                elif dow == 0:
-                    return dt - timedelta(days=3) 
+                    return dt - timedelta(2)
+                elif dow == 5:
+                    return dt - timedelta(1)
                 else: 
-                    return dt - timedelta(days=1)
+                    return dt
+                #else: 
+                    #return dt - timedelta(days=1)
+        def days_1_before(dt, dow):
+            dt = dt - timedelta(1)
+            return helpers.B_filter(dt, dow)
+        def week_before(dt, dow):
+            dt = dt - timedelta(7)
+            return helpers.B_filter(dt, dow)
+        def week_2_before(dt, dow):
+            dt = dt - timedelta(14)
+            return helpers.B_filter(dt, dow)
+        def month_before(dt, dow):
+            dt = dt - timedelta(30)
+            return helpers.B_filter(dt, dow)
+
+
+
 
 
 
@@ -87,13 +103,18 @@ class FFR_data():
         if 'Rate' in df.columns:
             df['Rate'] = df['Rate'].apply(helpers.split_rate)
         df['DayOfWeek'] = df['Day'].apply(lambda x : datetime.weekday(x))
-        df['NextDay'] = df.apply(lambda x: helpers.N_filter(x['Day'], x['DayOfWeek']), axis = 1)
-        df['PrevDay'] = df.apply(lambda x: helpers.B_filter(x['Day'], x['DayOfWeek']), axis = 1)
+        #df['NextDay'] = df.apply(lambda x: helpers.N_filter(x['Day'], x['DayOfWeek']), axis = 1)
+        df['DayBefore'] = df.apply(lambda x: helpers.days_1_before(x['Day'], x['DayOfWeek']), axis = 1)
+        df['1WeekBefore'] = df.apply(lambda x: helpers.week_before(x['Day'], x['DayOfWeek']), axis = 1)
+        df['2WeekBefore'] = df.apply(lambda x: helpers.week_2_before(x['Day'], x['DayOfWeek']), axis = 1)
+        df['MonthBefore'] = df.apply(lambda x: helpers.month_before(x['Day'], x['DayOfWeek']), axis = 1)
+
+
         return df
 
     def next_meeting(): #make automatic 
         date = '2022-12-14'
-        d = {'Day': ['2022-12-14'], 'Rate':['3.75%–4.00%']}
+        d = {'Day': ['2022-12-17'], 'Rate':['3.75%–4.00%']}
         df = pd.DataFrame(d)
         df['Day'] = df['Day'].apply(lambda x:datetime.strptime(x, '%Y-%m-%d'))
         return df
