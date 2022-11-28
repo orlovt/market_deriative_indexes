@@ -1,4 +1,6 @@
 from datetime import datetime, timedelta
+from calendar import monthrange
+
 
 class helpers():
         def split_rate(s): # splits string of type '0.00%-0.25% into a float num 12.5 pp
@@ -40,3 +42,13 @@ class helpers():
         def month_before(dt):
             dt = dt - timedelta(30)
             return helpers.B_filter(dt)
+
+        def N(dt): 
+            return monthrange(dt.year, dt.month)[1]
+        def M(dt): 
+            return dt.day -1
+
+if __name__ == "__main__": 
+    dt = datetime.strptime('2022-11-20', '%Y-%m-%d' )
+    print(helpers.N(dt))
+    print(helpers.M(dt))
