@@ -19,11 +19,14 @@ class FFR_data():
         time = datetime.now()
         start_time = time - timedelta(90)
         ff = yf.download("ZQ=F", start=start_time, end=time) #start="2000-01-01", end="2022-11-09"
+
         ff.reset_index(inplace=True)
+
         ff = ff[['Date', 'Close']]
         ff.columns = ['Day', 'Price']
 
         ff['Day'] = ff['Day'].apply(lambda x: datetime.strftime(x, "%Y-%m-%d"))
+
 
         priceoffutures_dict = {}
         for i in range(ff.shape[0]):
@@ -48,6 +51,7 @@ class FFR_data():
         df.reset_index(inplace=True)
         effrdict = {}
         df['DATE'] = df['DATE'].apply(lambda x: datetime.strftime(x, "%Y-%m-%d"))
+
         for i in range(df.shape[0]): 
             effrdict[df["DATE"][i]] = df["EFFR"][i]
         return effrdict
