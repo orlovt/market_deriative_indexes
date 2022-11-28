@@ -1,19 +1,20 @@
 import pandas as pd
 import numpy as np 
-import requests
+
 
 
 from calendar import monthrange
-import json
-import math 
+
+
 
 
 import yfinance as yf
-from bs4 import BeautifulSoup
+
 from datetime import datetime, timedelta
 
 from helpers import helpers
-from data import FFR_data
+
+from data import FFR_data, numeric
 
 
 
@@ -28,14 +29,18 @@ class ffr():
     def f_prices(self):
         res = {}
         priceoffutures_dict = FFR_data.get_futures()
+        effrdict = FFR_data.get_EFFR('', 'now')
         for i in self.prev_ts:
             dt = self.prev_ts[i]
             strdt = datetime.strftime(dt, "%Y-%m-%d")
             price = priceoffutures_dict[strdt] if strdt in priceoffutures_dict.keys() else 0
+            effr = effrdict[strdt] if strdt in effrdict.keys() else 0
             impl_rate = 100 - price
-            
-            print(i, dt, strdt, price, impl_rate)
-        return None
+            ffstart = numeric.averageoverspan(dt, priceoffutures_dict)
+            res[i] = {'dt':dt, 'strdt':strdt, 'fprice':price, 'impl_r':impl_rate, 'effr': effr, 'ffstart':ffstart}
+
+        return res
+
 
 
 
@@ -53,6 +58,13 @@ if __name__ == "__main__":
     test = ffr('2022-11-02')
     #print(test.ts)
     #print(test.prev_ts)
-    print(test.prev_futures_prices)
+    print(test.prev_futures_prices['1DB'])
+    print(test.prev_futures_prices['1WB'])
+    print(test.prev_futures_prices['2WB'])
+    print(test.prev_futures_prices['1MB'])
+    #print(test.prev_futures_prices)
+    #print(FFR_data.get_EFFR('', '', 'now'))
+
+
 
 

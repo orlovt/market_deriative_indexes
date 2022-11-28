@@ -1,6 +1,5 @@
 from datetime import datetime, timedelta
 
-
 class helpers():
         def split_rate(s): # splits string of type '0.00%-0.25% into a float num 12.5 pp
             if chr(8211) in s:
@@ -41,4 +40,3 @@ class helpers():
         def month_before(dt):
             dt = dt - timedelta(30)
             return helpers.B_filter(dt)
-
