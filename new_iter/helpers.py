@@ -1,7 +1,6 @@
 from datetime import datetime, timedelta
 from calendar import monthrange
 
-
 class helpers():
         def split_rate(s): # splits string of type '0.00%-0.25% into a float num 12.5 pp
             if chr(8211) in s:
@@ -29,9 +28,19 @@ class helpers():
                     return dt
 
 
+        def days_n_before(dt, n):
+            dt = dt - timedelta(n)
+            return helpers.B_filter(dt)
+
 
         def days_1_before(dt):
             dt = dt - timedelta(1)
+            return helpers.B_filter(dt)
+        def days_3_before(dt):
+            dt = dt - timedelta(3)
+            return helpers.B_filter(dt)
+        def days_5_before(dt):
+            dt = dt - timedelta(5)
             return helpers.B_filter(dt)
         def week_before(dt):
             dt = dt - timedelta(7)
@@ -43,10 +52,13 @@ class helpers():
             dt = dt - timedelta(30)
             return helpers.B_filter(dt)
 
-        def N(dt): 
-            return monthrange(dt.year, dt.month)[1]
         def M(dt): 
+            return monthrange(dt.year, dt.month)[1]
+        def N(dt): 
             return dt.day -1
+
+        def mtype(dt, prev, next):             
+            return None
 
 if __name__ == "__main__": 
     dt = datetime.strptime('2022-11-20', '%Y-%m-%d' )
