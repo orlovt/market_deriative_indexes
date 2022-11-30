@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from calendar import monthrange
 
-from helpers import helpers
+from helpers import helpers, analytical
 from data import FFR_data
 
 
@@ -19,7 +19,7 @@ class ffr():
         res = {}
 
         priceoffutures_dict = FFR_data.get_futures()
-        effrdict = FFR_data.get_EFFR('', 'now')
+        effrdict = FFR_data.get_EFFR('2015-01-01', 'all')
 
         for i in self.prev_ts:
             
@@ -36,7 +36,9 @@ class ffr():
             WA = N/M * EFFR + (M-N)/M *IMPL
             PH = (IMPL - EFFR)/(WA - EFFR)
 
-            res[i] = {'DT':dt, 'IMPL':IMPL, 'EFFR': EFFR, 'WA':WA, 'PH':PH, 'EH':PH*0.25}
+            dct = analytical(dt, EFFR, PH).prob_tree()
+
+            res[i] = {'DT':dt, 'IMPL':IMPL, 'EFFR': EFFR, 'WA':WA, 'PH':PH, 'EH':PH*0.25, 'extra':dct }
         return res
 
 
@@ -44,6 +46,7 @@ class ffr():
 
 
 if __name__ == "__main__":
-    test = ffr('2022-09-21')
+    test = ffr('2022-07-27')
     for i in test.prev_futures_prices: 
-        print(test.prev_futures_prices[i])
+        print(i, test.prev_futures_prices[i]['extra'])
+    
