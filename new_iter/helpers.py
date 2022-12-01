@@ -46,30 +46,34 @@ class analytical():
         self.DT = dt
         self.EFFR = EFFR
         self.PH = PH
-        self.probs = self.prob_tree()
-    def prob_tree(self): 
-        print(self.PH)
 
+        self.probs = self.prob_tree()
+    
+    def prob_tree(self): 
+        
         res = {}
+        
         low_EFFR = math.floor(self.EFFR / .25) * 0.25
         up_EFFR = low_EFFR + 0.25
 
-        lower_hike = round(self.PH // 1 * 0.25, 3)
-        upper_hike = round(lower_hike + 0.25, 3)
-        print(lower_hike, upper_hike)
-        P_upper = round(self.PH % 1, 3)
-        P_lower = round(1- P_upper, 3)
-        range = f'{low_EFFR}%-{up_EFFR}%'
+        lower_hike = math.floor(self.PH) * 0.25
+        upper_hike = lower_hike + 0.25
+        
+
+        P_upper = round(self.PH % 1, 2)
+        P_lower = round(1- P_upper, 2)
+
+
         lower_range = f'{low_EFFR + lower_hike}%-{up_EFFR + lower_hike}%'
         upper_range = f'{low_EFFR + upper_hike}%-{up_EFFR + upper_hike}%'
 
-        res[lower_hike] = {'R-1':range,  'P':P_lower, 'R':lower_range}
-        res[upper_hike] = {'R-1':range, 'P':P_upper, 'R':upper_range}
+        res[lower_hike] = {'P':P_lower, 'R':lower_range}
+        res[upper_hike] = {'P':P_upper, 'R':upper_range}
 
         return res 
+    
     def get_probs(self):
         return self.probs
-
 
      
 
@@ -83,6 +87,9 @@ class analytical():
         
 
 if __name__ == "__main__": 
+
     dt = datetime.strptime('2022-11-20', '%Y-%m-%d' )
-    print(helpers.N(dt))
-    print(helpers.M(dt))
+    #print(helpers.N(dt))
+    #print(helpers.M(dt))
+    #test1 = analytical("2022-07-27", 1.58, 5.166666666666667)
+    #print(test1.get_probs())

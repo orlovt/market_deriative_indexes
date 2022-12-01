@@ -1,5 +1,4 @@
-from datetime import datetime, timedelta
-from calendar import monthrange
+from datetime import datetime
 
 from helpers import helpers, analytical
 from data import FFR_data
@@ -10,13 +9,15 @@ from data import FFR_data
 class ffr():
     def __init__(self, ts, type = 'single'):
         self.ts = ts 
-        #self.ts = datetime.strptime(ts, "%Y-%m-%d")
         self.type = type
         self.prev_ts = FFR_data.add_dates_list(self.ts)
-        self.prev_futures_prices = ffr.f_prices(self)
+        computes_probs  = ffr.f_prices(self)
+        self.prev_futures_prices = computes_probs[0]
+        self.days_B_data = computes_probs[1]
 
     def f_prices(self):
-        res = {}
+        main_res = {}
+        full_res = {}
 
         priceoffutures_dict = FFR_data.get_futures()
         effrdict = FFR_data.get_EFFR('2015-01-01', 'all')
@@ -27,26 +28,32 @@ class ffr():
             strdt = datetime.strftime(dt, "%Y-%m-%d")
             
             P = priceoffutures_dict[strdt] if strdt in priceoffutures_dict.keys() else 0
-            
             EFFR = effrdict[strdt] if strdt in effrdict.keys() else 0
             IMPL = 100 - P
 
             N = helpers.N(dt)
             M = helpers.M(dt)
+
             WA = N/M * EFFR + (M-N)/M *IMPL
             PH = (IMPL - EFFR)/(WA - EFFR)
 
             dct = analytical(dt, EFFR, PH).prob_tree()
 
-            res[i] = {'DT':dt, 'IMPL':IMPL, 'EFFR': EFFR, 'WA':WA, 'PH':PH, 'EH':PH*0.25, 'extra':dct }
-        return res
+            full_res[i] = {"DT":dt, "STRDT":strdt, "FPRICE":P, 
+                            "EFFR":EFFR,  "IMPL_R":IMPL, 
+                            "N":N, "M":M, "WA":WA, "PH":PH, 
+                            "RHIKE_PROBS":dct}
+
+            main_res[i] = {'DT':strdt,'EFFR':EFFR,'Rate_Hikes':dct}
+
+        return [main_res, full_res]
 
 
 
 
 
 if __name__ == "__main__":
-    test = ffr('2022-07-27')
+    test = ffr('2022-09-21')
     for i in test.prev_futures_prices: 
-        print(i, test.prev_futures_prices[i]['extra'])
+        print(i, test.prev_futures_prices[i]) #['extra']
     
