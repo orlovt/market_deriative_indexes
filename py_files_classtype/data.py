@@ -5,16 +5,11 @@ import yfinance as yf
 import pandas_datareader as pdr
 
 from datetime import datetime, timedelta
-from helpers import helpers
+from help_functions import helpers
 
 class FFR_data_df(): 
 
 #df
-
-
-
-#df
-
     def get_prev_dates_wiki():
         url = 'https://en.wikipedia.org/wiki/History_of_Federal_Open_Market_Committee_actions'
         html = requests.get(url).content
@@ -30,9 +25,7 @@ class FFR_data_df():
         df.columns = ['R', 'D']
 
         return df
-
 #df
-
     def dfadd_columns(df):
         df['DOW'] = df['D'].apply(lambda x : datetime.weekday(x))
         if 'R' in df.columns:
@@ -43,7 +36,6 @@ class FFR_data_df():
         #df['3WB'] 
         df['1MB'] = df.apply(lambda x: helpers.month_before(x['D'], x['DOW']), axis = 1)
         return df
-
 #none 
     def next_meeting(): #make automatic 
         date = '2022-12-14'
@@ -52,10 +44,9 @@ class FFR_data_df():
         df['D'] = df['D'].apply(lambda x:datetime.strptime(x, '%Y-%m-%d'))
         return df
 
-
 class FFR_data(): 
 
- #dict    
+#dict    
     def get_futures(): 
         time = datetime.now()
         start_time = datetime.strptime('2022-11-20', '%Y-%m-%d' )
@@ -64,17 +55,18 @@ class FFR_data():
 
         ff.reset_index(inplace=True)
 
-        ff = ff[['Date', 'Close']]
+        ff = ff[['Date', 'Close']].copy()
         ff.columns = ['Day', 'Price']
 
-        ff['Day'] = ff['Day'].apply(lambda x: datetime.strftime(x, "%Y-%m-%d"))
+
+        ff.loc[:, 'Day'] = ff['Day'].apply(lambda x: datetime.strftime(x, "%Y-%m-%d"))
 
 
         priceoffutures_dict = {}
         for i in range(ff.shape[0]):
             priceoffutures_dict[ff['Day'][i]] = ff['Price'][i]
         return priceoffutures_dict
-
+#dict 
     def get_EFFR(start, type):
         if type == 'now':  
             end = datetime.now()
@@ -96,7 +88,6 @@ class FFR_data():
         for i in range(df.shape[0]): 
             effrdict[df["DATE"][i]] = df["EFFR"][i]
         return effrdict
-
 #dict 
     def add_dates_list(day):
         day = datetime.strptime(day, "%Y-%m-%d")

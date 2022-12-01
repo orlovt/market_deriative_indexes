@@ -1,17 +1,17 @@
 from datetime import datetime
 
-from helpers import helpers, analytical
+from help_functions import helpers, analytical
 from data import FFR_data
 
 
 
 
-class ffr():
+class Analytics():
     def __init__(self, ts, type = 'single'):
         self.ts = ts 
         self.type = type
         self.prev_ts = FFR_data.add_dates_list(self.ts)
-        computes_probs  = ffr.f_prices(self)
+        computes_probs  = Analytics.f_prices(self)
         self.prev_futures_prices = computes_probs[0]
         self.days_B_data = computes_probs[1]
 
@@ -53,7 +53,7 @@ class ffr():
 
 
 if __name__ == "__main__":
-    test = ffr('2022-09-21')
+    test = Analytics('2022-09-21')
     for i in test.prev_futures_prices: 
         print(i, test.prev_futures_prices[i]) #['extra']
     
