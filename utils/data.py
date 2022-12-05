@@ -51,7 +51,7 @@ class FFR_data():
         time = datetime.now()
         start_time = datetime.strptime('2022-11-20', '%Y-%m-%d' )
         #start_time = time - timedelta(90)
-        ff = yf.download("ZQ=F", start=start_time, end=time) #start="2000-01-01", end="2022-11-09"
+        ff = yf.download("ZQ=F", start=start_time, end=time, progress=False) #start="2000-01-01", end="2022-11-09"
 
         ff.reset_index(inplace=True)
 
@@ -101,5 +101,5 @@ class FFR_data():
         
 if __name__ == '__main__':
     print(FFR_data.get_EFFR('2022-11-20', 'near'))
-    #p = FFR_data.get_futures()
-    #dt = datetime.strptime('2022-11-20', '%Y-%m-%d' )
+    p = FFR_data.get_futures()
+    dt = datetime.strptime('2022-11-20', '%Y-%m-%d' )
