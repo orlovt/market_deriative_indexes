@@ -1,10 +1,10 @@
-## IDEA
+## Idea
 
-In this project I was aiming to derive probabilities of fed rate hikes implied by the market participants simularly to CME's FedWatchTool + add link 
+In this project I was aiming to derive probabilities of fed rate hikes implied by the market participants simularly to [**CME's FedWatchTool**](https://www.cmegroup.com/markets/interest-rates/cme-fedwatch-tool.html) 
 
 ## Data
 
-The **Fed Funds Futures** are Traded on the **CME** exchange, the price of futures for a given month is the average rate over month $\small{\sum_{n=1}^{30} 100 - r_i}$,  where $\small{r_i}$ is the implied *effective fed fund rate* for a given day. This data be used  can be used to forsee changes in the current target rate of the FED. 
+The **Fed Funds Futures** are Traded on the [**CME**](https://www.cmegroup.com "The link to exchange") exchange, the price of futures for a given month is the average rate over month $\small{\sum_{n=1}^{30} 100 - r_i}$,  where $\small{r_i}$ is the implied *effective fed fund rate* for a given day. This data be used  can be used to forsee changes in the current target rate of the FED. 
 
 ## Methodology
 
@@ -16,5 +16,5 @@ If the FOMC meeting (announcment of the next rate target range) is on the n-th d
 
 In order ton distinguish the binary probabilities of these higher order hikes (50pp vs. 75pp for example), I used the following formula $H_{Lower} = min(P_{hike}) * 0.25, H_{Higher} = H_{Lower} + 0.25$, these are representatve of the actuall implied probabilities, due to the nature of futurres pricing. 
 
-## How to use? 
+## Use cases? 
 
