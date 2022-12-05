@@ -5,6 +5,6 @@ The FedFunds Futures are Traded on the CME exchange, the price of funutures for 
 
 The methodology used in order to compute implied rates is the following: 
 
-If the FOMC meeting (announcment of the next rate target range) is on the n-th day of month, than the rate will be active for $M-N$ days, and the current effr for all days before the meeting $N$ days. Using the weighted average formula the price of futures is the following $$P = \frac{M-N}{M} * r_{after FOMC } + \frac{N}{M} * r_{before FOMC}. Using this formula I was able to derive the implied rate hike. The implied hike is in terms of 25 percentage poinds, however sometimes hikes are 50, 75, 100 pp. 
+If the FOMC meeting (announcment of the next rate target range) is on the n-th day of month, than the rate will be active for $M-N$ days, and the current effr for all days before the meeting $N$ days. Using the weighted average formula the price of futures is the following $$P = \frac{M-N}{M} * r_{after FOMC } + \frac{N}{M} * r_{before FOMC}$$. Using this formula I was able to derive the implied rate hike. The implied hike is in terms of 25 percentage poinds, however sometimes hikes are 50, 75, 100 pp. 
 
 In order ton distinguish the binary probabilities of these higher order hikes I used the following formula $Hike_{Lower} = min(P_{hike}) * 0.25, Hike_{Higher} = Hike_{Lower} + 0.25$ 
