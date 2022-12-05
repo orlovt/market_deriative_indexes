@@ -17,6 +17,13 @@ class Analytics():
         self.days_B_data = probs[1]
         self.df = probs[2]
         self.df_plt = probs[3]
+    
+    def get_prob_dist_df(self):
+        return self.df
+    def get_prob_dsit_df_2(self): 
+        return self.df_plt
+    def get_prob_dist_dict(self): 
+        return self.days_B_data
 
     def f_prices(self):
         main_res = {}
