@@ -61,7 +61,6 @@ class Analytics():
                             "RHIKE_PROBS":dct}
 
             main_res[i] = {'DT':strdt,'EFFR':EFFR,'Rate_Hikes':dct}
-
             
             d = {"Date":strdt, "EffectiveFedFundsRate":EFFR, 
                 "Hike_Low":list(dct.keys())[0], 
@@ -88,29 +87,8 @@ class Analytics():
 
         return [main_res, full_res, df, pf]
 
-    def create_df(self): 
-        df = pd.DataFrame(columns=["Date", "EffectiveFedFundsRate", "Hike_Low", "Prob_Hike_Low", "Range_Hike_Low",  "Hike_High", "Prob_Hike_High", "Range_Hike_High"])
-        priceoffutures_dict = FFR_data.get_futures()
-        effrdict = FFR_data.get_EFFR('2015-01-01', 'all')
-        for i in self.prev_ts: 
-            dt = self.prev_ts[i]
-            strdt = datetime.strftime(dt, "%Y-%m-%d")
-            P = priceoffutures_dict[strdt] if strdt in priceoffutures_dict.keys() else 0
-            EFFR = effrdict[strdt] if strdt in effrdict.keys() else 0
-            IMPL = 100 - P
-
-            N = helpers.N(dt)
-            M = helpers.M(dt)
-
-            WA = N/M * EFFR + (M-N)/M *IMPL
-            PH = (IMPL - EFFR)/(WA - EFFR)
-
-            dct = analytical(dt, EFFR, PH).prob_tree()
-
-            row = pd.Series()
 
 
-        
 
 
 
