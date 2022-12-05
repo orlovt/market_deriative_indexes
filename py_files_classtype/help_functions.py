@@ -38,9 +38,6 @@ class helpers():
         def N(dt): 
             return dt.day -1
 
-        def mtype(dt, prev, next):             
-            return None
-
 class analytical():
     def __init__(self, dt, EFFR, PH): 
         self.DT = dt
