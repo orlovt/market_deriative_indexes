@@ -2,8 +2,9 @@ from datetime import datetime, timedelta
 from calendar import monthrange
 import math
 
-class helpers():
-        def split_rate(s): # splits string of type '0.00%-0.25% into a float num 12.5 pp for #(DF) -->  str 
+class helpers(): # class of helper functions for simple computations 
+
+        def split_rate(s): # splits string of type '0.00%-0.25% into a float num 12.5 pp for 
             if chr(8211) in s:
                 wow = s.split(chr(8211))
                 s1 = wow[0][:-1]
@@ -12,14 +13,14 @@ class helpers():
             else:
                 return float(s[:-1]) 
 
-        def N_filter(dt, dow): # returns the next date markets were open for the date given 
+        def N_filter(dt, dow): # returns the next date markets were open for the date given in dt format 
             
                 if dow >= 4: 
                     return dt + timedelta(days=(7-dow))
                 else: 
                     return dt + timedelta(days=1)
 
-        def B_filter(dt): # returns the last date markets were open for the date given 
+        def B_filter(dt): # returns the last date markets were open for the date given in dt format
                 dow = datetime.weekday(dt)
                 if dow == 6: 
                     return dt - timedelta(2)
@@ -29,24 +30,26 @@ class helpers():
                     return dt
 
 
-        def days_n_before(dt, n):
+        def days_n_before(dt, n): #returns the nth day before the given day when the markets were working, (Sun,1)--> Fri in dt format
             dt = dt - timedelta(n)
             return helpers.B_filter(dt)
 
-        def M(dt): 
+        def M(dt): #Number of days in the month 
             return monthrange(dt.year, dt.month)[1]
-        def N(dt): 
+        def N(dt): #Number of days in the month previous to the current day 
             return dt.day -1
 
-class analytical():
-    def __init__(self, dt, EFFR, PH): 
+class Probabilies():
+    def __init__(self, dt, EFFR, PH): # constructior method for the Probabilities class, 
+                                      # which derived probabilities of the rate ranges after the FOMC meeting at day 'dt'
         self.DT = dt
         self.EFFR = EFFR
         self.PH = PH
 
         self.probs = self.prob_tree()
     
-    def prob_tree(self): 
+    def prob_tree(self): # class method which derives proabilities, 
+                         # lower/higher hukes and lower/higher rate ranges 
         
         res = {}
         
@@ -69,7 +72,7 @@ class analytical():
 
         return res 
     
-    def get_probs(self):
+    def get_probs(self): # getter method for the 'probs' attribute 
         return self.probs
 
      
