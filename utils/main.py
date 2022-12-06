@@ -21,14 +21,25 @@ class Analytics():
         self.df = probs[2]
         self.df_plt = probs[3]
     
-    def get_prob_dist_df(self):
+    def get_prob_dist_df(self): #returns the df object
         return self.df
-    def get_prob_dsit_df_2(self): 
+    def get_prob_dsit_df_2(self): #retutns plotting df object 
         return self.df_plt
-    def get_prob_dist_dict(self): 
+    def get_prob_dist_dict(self): #dictionary with previous days hikke rate probability distributions 
         return self.days_B_data
 
     def f_prices(self):
+        '''
+        Defines 4 objects and budles them in a list 
+        
+        1. 
+        2. 
+        3. 
+        4. 
+
+        
+        '''
+
         main_res = {}
         full_res = {}
         df = pd.DataFrame(columns=["Date", "EffectiveFedFundsRate", 
