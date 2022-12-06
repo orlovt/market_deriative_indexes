@@ -1,6 +1,3 @@
-import pandas as pd
-import requests
-
 import yfinance as yf
 import pandas_datareader as pdr
 
