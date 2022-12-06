@@ -1,13 +1,16 @@
 from datetime import datetime
 import pandas as pd 
 
-from help_functions import helpers, analytical
+from help_functions import helpers, Probabilies
 from data import FFR_data
 
 
 
 
 class Analytics():
+    '''
+
+    '''
     def __init__(self, ts, type = 'single'):
         self.ts = ts 
         self.type = type
@@ -43,7 +46,7 @@ class Analytics():
                                    
 
         priceoffutures_dict = FFR_data.get_futures()
-        effrdict = FFR_data.get_EFFR('2015-01-01', 'all')
+        effrdict = FFR_data.get_EFFR('2015-01-01')
 
         for i in self.prev_ts:
             
@@ -60,7 +63,7 @@ class Analytics():
             WA = N/M * EFFR + (M-N)/M *IMPL
             PH = (IMPL - EFFR)/(WA - EFFR)
 
-            dct = analytical(dt, EFFR, PH).prob_tree()
+            dct = Probabilies(dt, EFFR, PH).prob_tree()
 
             full_res[i] = {"DT":dt, "STRDT":strdt, "FPRICE":P, 
                             "EFFR":EFFR,  "IMPL_R":IMPL, 
