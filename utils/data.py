@@ -34,9 +34,13 @@ class FFR_data():
             priceoffutures_dict[ff['Day'][i]] = ff['Price'][i]
         return priceoffutures_dict
 #dict 
-    def get_EFFR(start, type):
+    def get_EFFR(start):
+
+        type = 'all'
 
         '''
+        Input: 
+            start - date in (YYYY-MM-DD) format
         
         Parses effective fed funds rate (effr) using pandas data reader from st.louis fred 
 
@@ -57,7 +61,8 @@ class FFR_data():
             effrdict[df["DATE"][i]] = df["EFFR"][i]
         return effrdict
 #dict 
-    def add_dates_list(day):
+    def add_dates_list(day): 
+
         day = datetime.strptime(day, "%Y-%m-%d")
         return {'1DB':helpers.days_n_before(day, 1), 
                 '3DB':helpers.days_n_before(day, 3), 
