@@ -116,9 +116,11 @@ class Analytics():
 
 
 if __name__ == "__main__":
-    test = Analytics('2022-09-21')
+    test = Analytics('2022-11-02')
     for i in test.prev_futures_prices: 
-        print(i, test.prev_futures_prices[i]) #['extra']
+        print(i, test.prev_futures_prices[i])
     print(test.df)
     print(test.df_plt)
+
+
     
