@@ -91,5 +91,5 @@ if __name__ == "__main__":
     dt = datetime.strptime('2022-11-20', '%Y-%m-%d' )
     print(helpers.N(dt))
     print(helpers.M(dt))
-    test1 = analytical("2022-07-27", 1.58, 5.166666666666667)
+    test1 = Probabilies("2022-07-27", 1.58, 5.166666666666667)
     print(test1.get_probs())
