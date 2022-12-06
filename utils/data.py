@@ -8,6 +8,13 @@ class FFR_data():
 
 #dict    
     def get_futures(): 
+        '''
+        
+        Parses futures prices using yfininaice library 
+
+        Returns a dictionary with { date: fedfunds_futures_price}
+
+        '''
         time = datetime.now()
         start_time = datetime.strptime('2022-11-20', '%Y-%m-%d' )
         #start_time = time - timedelta(90)
@@ -28,22 +35,23 @@ class FFR_data():
         return priceoffutures_dict
 #dict 
     def get_EFFR(start, type):
-        if type == 'now':  
-            end = datetime.now()
-            start = end - timedelta(90)
-        elif type == 'near': 
-            now = datetime.strptime(start, '%Y-%m-%d') #%Y-%m-%d
-            end = now + timedelta(30)
-            start = now - timedelta(30)
-        elif type == 'all': 
+
+        '''
+        
+        Parses effective fed funds rate (effr) using pandas data reader from st.louis fred 
+
+        Returns a dictionary with { date: effr}
+
+        '''
+        if type == 'all': 
             end = datetime.now()
             start = datetime.strptime(start, '%Y-%m-%d') #%Y-%m-%d
 
 
-        df = pdr.DataReader('EFFR', 'fred', start, end)
-        df.reset_index(inplace=True)
-        effrdict = {}
-        df['DATE'] = df['DATE'].apply(lambda x: datetime.strftime(x, "%Y-%m-%d"))
+            df = pdr.DataReader('EFFR', 'fred', start, end)
+            df.reset_index(inplace=True)
+            effrdict = {}
+            df['DATE'] = df['DATE'].apply(lambda x: datetime.strftime(x, "%Y-%m-%d"))
 
         for i in range(df.shape[0]): 
             effrdict[df["DATE"][i]] = df["EFFR"][i]
