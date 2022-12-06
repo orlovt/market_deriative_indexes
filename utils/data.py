@@ -102,4 +102,3 @@ class FFR_data():
 if __name__ == '__main__':
     print(FFR_data.get_EFFR('2022-11-20', 'near'))
     p = FFR_data.get_futures()
-    dt = datetime.strptime('2022-11-20', '%Y-%m-%d' )
