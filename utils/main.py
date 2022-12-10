@@ -20,7 +20,8 @@ class Analytics():
         self.days_B_data = probs[1]
         self.df = probs[2]
         self.df_plt = probs[3]
-    
+        self.test = probs[4]
+        self.simple = probs[5]
     def get_prob_dist_df(self): #returns the df object
         return self.df
     def get_prob_dsit_df_2(self): #retutns plotting df object 
@@ -42,6 +43,7 @@ class Analytics():
 
         main_res = {}
         full_res = {}
+        t = {}
         df = pd.DataFrame(columns=["Date", "EffectiveFedFundsRate", 
                                    "Hike_Low", 
                                    "Prob_Hike_Low", 
@@ -54,6 +56,7 @@ class Analytics():
                                    "Hike", 
                                    "Prob_Hike", 
                                    "Range"])
+        sim_df = pd.DataFrame(columns=['MD',"TD","IMPL","R_new","EXPHIKE"])
                                    
 
         priceoffutures_dict = FFR_data.get_futures()
@@ -65,7 +68,7 @@ class Analytics():
             strdt = datetime.strftime(dt, "%Y-%m-%d")
             
             P = priceoffutures_dict[strdt] if strdt in priceoffutures_dict.keys() else 0
-            EFFR = effrdict[strdt] if strdt in effrdict.keys() else 0
+            EFFR = (effrdict[strdt] if strdt in effrdict.keys() else 0) + 0.045
             IMPL = 100 - P
 
             N = helpers.N(dt)
@@ -74,7 +77,15 @@ class Analytics():
             WA = N/M * EFFR + (M-N)/M *IMPL
             PH = (IMPL - EFFR)/(WA - EFFR)
 
-            dct = Probabilies(dt, EFFR, PH).prob_tree()
+            #PH2 = M/(M-N) * IMPL/(N * EFFR)
+
+            PH3 = M/(M-N) * IMPL/EFFR
+
+            R_new = (IMPL - (N/M) * EFFR) * (M/(M-N))
+
+
+
+            dct = Probabilies(dt, EFFR, PH3).get_probs()
 
             full_res[i] = {"DT":dt, "STRDT":strdt, "FPRICE":P, 
                             "EFFR":EFFR,  "IMPL_R":IMPL, 
@@ -90,6 +101,8 @@ class Analytics():
                 "Hike_High":list(dct.keys())[1], 
                 "Prob_Hike_High":dct[list(dct.keys())[1]][list(dct[list(dct.keys())[0]].keys())[0]], 
                 "Range_Hike_High":dct[list(dct.keys())[1]][list(dct[list(dct.keys())[0]].keys())[1]]}
+            
+            simple_row = {'MD':self.ts, "TD":dt, "IMPL":IMPL, "R_new":R_new, "EXPHIKE":R_new - EFFR}
 
             l = {"Date":strdt, "EffectiveFedFundsRate":EFFR, "Type":'Low', 
                 "Hike":list(dct.keys())[0], 
@@ -100,13 +113,28 @@ class Analytics():
                 "Hike":list(dct.keys())[1], 
                 "Prob_Hike":dct[list(dct.keys())[1]][list(dct[list(dct.keys())[0]].keys())[0]], 
                 "Range":dct[list(dct.keys())[1]][list(dct[list(dct.keys())[0]].keys())[1]]}
-            
+
+            t[i] = { "STRDT":strdt,
+                            "EFFR":EFFR,  "IMPL_R":IMPL, 
+                            "PH3":PH3, "RH":dct
+                             
+                                }
+                            #"RHIKE_PROBS":dct}
+
+
+            sim_df = sim_df.append(simple_row, ignore_index = True)
             df = df.append(d, ignore_index=True)
             
             pf = pf.append(l, ignore_index=True)
             pf = pf.append(h, ignore_index=True)
 
-        return [main_res, full_res, df, pf]
+        return [main_res, full_res, df, pf, t, sim_df]
+
+
+    def simple_df(self, ts): 
+            
+        return None
+
 
 
 
@@ -116,11 +144,18 @@ class Analytics():
 
 
 if __name__ == "__main__":
-    test = Analytics('2022-11-02')
-    for i in test.prev_futures_prices: 
-        print(i, test.prev_futures_prices[i])
-    print(test.df)
-    print(test.df_plt)
+    #test = Analytics('2022-11-02')
+    #for i in test.test: 
+        #print(i, test.test[i])
+    #print(test.df)
+    #print(test.df_plt)
+
+    test2 = Analytics('2022-11-02')
+    #for i in test2.test: 
+    #    print(i, test2.test[i])
+    #print(test2.df)
+    #print(test2.df_plt)
+    print(test2.simple)
 
 
     
